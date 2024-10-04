@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymLeaf.org"
+      th:replace="~{base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <section>
+    <div class="container p-5">
+      <p class="text-center fs-3 mt-2">Admin Dashboard</p>
+      <div class="row mt-3">
+
+
+        <div class="col-md-4 mt-2">
+          <a href="/admin/loadAddProduct" class="text-decoration-none">
+            <div class="card card-sh">
+              <div class="card-body text-center text-primary">
+                <i class="fa-solid fa-square-plus fa-2x text-primary"></i>
+                <h4>Add Product</h4>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-4 mt-2">
+          <a href="/admin/category" class="text-decoration-none">
+            <div class="card card-sh">
+              <div class="card-body text-center text-warning">
+                <i class="fa-solid fa-list fa-2x"></i>
+                <h4>Add Category</h4>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-4 mt-2">
+          <a href="#" class="text-decoration-none">
+            <div class="card card-sh">
+              <div class="card-body text-center text-success">
+                <i class="fa-solid fa-book-open fa-2x"></i>
+                <h4>View Product</h4>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Using text-info for a new color (light blue) -->
+        <div class="col-md-4 mt-4">
+          <a href="#" class="text-decoration-none">
+            <div class="card card-sh">
+              <div class="card-body text-center text-info">
+                <i class="fa-solid fa-box fa-2x"></i>
+                <h4>Orders</h4>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Using text-danger for another color (red) -->
+        <div class="col-md-4 mt-4">
+          <a href="#" class="text-decoration-none">
+            <div class="card card-sh">
+              <div class="card-body text-center text-danger">
+                <i class="fa-solid fa-circle-user fa-2x"></i>
+                <h4>Users</h4>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Using text-secondary for a different color (gray) -->
+        <div class="col-md-4 mt-4">
+          <a href="#" class="text-decoration-none">
+            <div class="card card-sh">
+              <div class="card-body text-center text-secondary">
+                <i class="fa-solid fa-user-plus fa-2x"></i>
+                <h4>Add Admin</h4>
+              </div>
+            </div>
+          </a>
+        </div>
+
+
+
+      </div>
+    </div>
+  </section>
+</body>
+</html>
