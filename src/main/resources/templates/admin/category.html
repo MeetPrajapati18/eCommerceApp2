@@ -3,7 +3,7 @@
       th:replace="~{base::Layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Category</title>
 </head>
 <body>
   <section>
@@ -13,7 +13,14 @@
           <div class="card card-sh">
             <div class="card-header text-center ">
               <p class="fs-4">Add Category</p>
-
+              <th:block th:if="${session.successMsg}">
+                <p class="text-success fw-bold">[[${session.successMsg}]]</p>
+                <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+              </th:block>
+              <th:block th:if="${session.errorMsg}">
+                <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+              </th:block>
             </div>
             <div class="card-body">
               <form action="/admin/saveCategory" method="post"
@@ -66,7 +73,14 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                <tr th:each="cat,c:${categories}">
+                  <th scope="row">[[${c.count}]]</th>
+                  <td>[[${cat.name}]]</td>
+                  <td>[[${cat.isActive}]]</td>
+                  <td><img th:src="@{'/img/category_img/' + ${cat.imageName}}" width="50px" height="50px"></td>
+                  <td><a th:href="@{'/admin/loadEditCategory/'+${cat.id}}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square text-light"></i>Edit</a>
+                  <a th:href="@{'/admin/deleteCategory/'+${cat.id}}" class="btn btn-danger"><i class="fa-solid fa-trash text-light"></i>Delete</a></td>
+                </tr>
                 </tbody>
               </table>
             </div>

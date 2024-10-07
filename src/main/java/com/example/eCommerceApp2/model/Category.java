@@ -1,37 +1,34 @@
 package com.example.eCommerceApp2.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Entity
+@Document(collection = "categories") // Specify the collection name if desired
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private String id; // MongoDB uses String for ObjectId
     private String name;
-
     private String imageName;
+    private Boolean isActive; // Use 'isActive' to be consistent with Java naming conventions
 
-    private Boolean isActive;
+    // Constructors
+    public Category() {
+        // Default constructor for MongoDB
+    }
 
-    public int getId() {
+    public Category(String name, String imageName, Boolean isActive) {
+        this.name = name;
+        this.imageName = imageName;
+        this.isActive = isActive;
+    }
+
+    // Getters and Setters
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -51,16 +48,11 @@ public class Category {
         this.imageName = imageName;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() { // Getter name reflects the field name
         return isActive;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setIsActive(Boolean isActive) { // Setter name reflects the field name
+        this.isActive = isActive;
     }
-
-
-
-
-
 }
