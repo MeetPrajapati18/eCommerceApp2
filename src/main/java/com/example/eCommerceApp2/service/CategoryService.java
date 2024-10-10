@@ -11,7 +11,9 @@ public interface CategoryService {
 
     Boolean existsCategory(String name); // Keep this method only
 
-    public Boolean deleteCategory(String id);
+    Boolean deleteCategory(String id);
 
-    public Category getCategoryById(String id);
+    Category getCategoryById(String id);
+
+    List<Category> getAllActiveCategory();
 }

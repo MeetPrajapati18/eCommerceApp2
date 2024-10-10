@@ -2,8 +2,10 @@ package com.example.eCommerceApp2.Controller;
 
 import com.example.eCommerceApp2.model.Category;
 import com.example.eCommerceApp2.model.Product;
+import com.example.eCommerceApp2.model.UserEntity;
 import com.example.eCommerceApp2.service.CategoryService;
 import com.example.eCommerceApp2.service.ProductService;
+import com.example.eCommerceApp2.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -31,8 +34,22 @@ public class AdminController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/")
-    public String index(){
+    @Autowired
+    private UserService userService;
+
+    @ModelAttribute
+    public void getUserDetails(Principal p, Model m){
+        if(p != null){
+            String email = p.getName();
+            UserEntity userByEmail = userService.getUserByEmail(email);
+            m.addAttribute("user",userByEmail);
+        }
+        List<Category> allActiveCategory = categoryService.getAllActiveCategory();
+        m.addAttribute("categories",allActiveCategory);
+    }
+
+    @GetMapping({"", "/"})
+    public String index() {
         return "admin/index";
     }
 
@@ -88,7 +105,7 @@ public class AdminController {
     @GetMapping("/loadEditCategory/{id}")
     public String loadEditCategory(@PathVariable String id, Model m){
         m.addAttribute("category", categoryService.getCategoryById(id));
-        return "admin/edit_product";
+        return "admin/edit_category";
     }
 
     @PostMapping("/updateCategory")
@@ -102,11 +119,10 @@ public class AdminController {
             oldCategory.setIsActive(category.getIsActive());
             oldCategory.setImageName(imageName);
         }
-
         Category updateCategory = categoryService.saveCategory(oldCategory);
         if(!ObjectUtils.isEmpty(updateCategory)){
             if (!file.isEmpty()){
-                String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/category_img";
+                String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/profile_img";
                 File saveFile = new File(uploadDir);
                 Path filePath = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
                 try {
@@ -119,11 +135,11 @@ public class AdminController {
         } else{
             session.setAttribute("errorMsg","Sorry Something went Wrong.");
         }
+
         return "redirect:/admin/loadEditCategory/" + category.getId();
     }
 
     //Product Section
-
     @GetMapping("/loadAddProduct")
     public String loadAddProduct(Model m){
         List<Category> categories = categoryService.getAllCategories();
@@ -135,6 +151,8 @@ public class AdminController {
     public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image, HttpSession session){
         String imageName = image.isEmpty()?"default.jpg": image.getOriginalFilename();
         product.setImage(imageName);
+        product.setDiscount(0.0);
+        product.setDiscountPrice(product.getPrice());
         Product saveProduct = productService.saveProduct(product);
 
         if(!ObjectUtils.isEmpty(saveProduct)){
@@ -154,5 +172,44 @@ public class AdminController {
         return "redirect:/admin/loadAddProduct";
     }
 
+    @GetMapping("/products")
+    public String loadViewProduct(Model m){
+        m.addAttribute("products",productService.getAllProducts());
+        return "admin/products";
+    }
+
+    @GetMapping("/deleteProduct/{id}")
+    public String deleteProduct(@PathVariable String id, HttpSession session){
+        Boolean deleteProduct = productService.deleteProduct(id);
+        if(deleteProduct){
+            session.setAttribute("successMsg","Your product has been deleted successfully.");
+        } else {
+            session.setAttribute("errorMsg","Sorry  something went wrong in server.");
+        }
+        return "redirect:/admin/products";
+    }
+
+    @GetMapping("/editProduct/{id}")
+    public String editProduct(@PathVariable String id, Model m){
+        m.addAttribute("product",productService.getProductById(id));
+        m.addAttribute("categories",categoryService.getAllCategories());
+        return "admin/edit_product";
+    }
+
+    @PostMapping("/updateProduct")
+    public String updateProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image, HttpSession session ,Model m){
+
+        if (product.getDiscount() < 0 || product.getDiscount() > 100) {
+            session.setAttribute("errorMsg", "invalid Discount");
+        } else {
+            Product updateProduct = productService.updateProduct(product, image, session);
+            if (!ObjectUtils.isEmpty(updateProduct)) {
+                session.setAttribute("successMsg", "Product has been updated successfully.");
+            } else {
+                session.setAttribute("errorMsg", "Something wrong on server");
+            }
+        }
+        return "redirect:/admin/editProduct/" + product.getId();
+    }
 }
 

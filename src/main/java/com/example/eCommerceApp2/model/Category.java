@@ -10,7 +10,8 @@ public class Category {
     private String id; // MongoDB uses String for ObjectId
     private String name;
     private String imageName;
-    private Boolean isActive; // Use 'isActive' to be consistent with Java naming conventions
+    private Boolean isActive;
+
 
     // Constructors
     public Category() {

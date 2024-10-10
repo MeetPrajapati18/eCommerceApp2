@@ -10,12 +10,8 @@
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
-
     <!-- Font Awesome (for icons, if needed) -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <section class="py-5">
@@ -23,27 +19,29 @@
             <div class="col-md-12 p-5">
                 <div class="row">
                 <div class="col-md-6 text-center">
-                    <img alt="iPhone 14 Pro" src="img/product_img/14pro.jpg" class="img-fluid" height="330" width="400">
+                    <img alt=" " th:src="@{'/img/product_img/'+${product.image}}" class="img-fluid" height="330" width="400">
                 </div>
                 <div class="col-md-6">
-                    <p class="fs-3">Iphone 14 pro max</p>
+                    <p class="fs-3">[[${product.title}]]</p>
                     <p>
-                        <span class="fw-bold">Description : </span><br>Apple Iphone 14 pro max, 1TB, 48 MP Camera
+                        <span class="fw-bold">Description : </span><br>[[${product.description}]]
                     </p>
                     <p>
-                        <span class="fw-bold"> Product Details: </span> <br> Status :
+                        <span class="fw-bold"> Product Details: </span> <br>
+                        Status :
+                        <th:block th:if="${product.stock > 0}">
                             <span class="badge bg-success">Available</span>
+                        </th:block>
+                        <th:block th:if="${product.stock <= 0}">
                             <span class="badge bg-warning">out of stock</span>
+                        </th:block>
 
-
-                        <br> Category: Mobile Phone<br> Policy : 7 Days Replacement & Return
+                        <br> Category: [[${product.category}]]<br> Policy : 7 Days Replacement & Return
                     </p>
                     <p class="fs-5 fw-bold">
-                        Price :&nbsp; &nbsp; &nbsp; &nbsp;<i class="fas fa-rupee-sign"></i>
-                        $1039<span
-                            class="fs-6 text-decoration-line-through text-secondary">$1299</span>
-                        <span class="fs-6  text-success">20%
-								off</span>
+                        Price : <i class="fas fa-rupee-sign"></i>
+                        [[${product.discountPrice}]]<span class="fs-6 text-decoration-line-through text-secondary">[[${product.price}]]</span>
+                        <span class="fs-6  text-success">[[${product.discount}]] off</span>
                     </p>
 
                     <div class="row">
@@ -60,9 +58,14 @@
                             <p>Free Shipping</p>
                         </div>
                     </div>
-                            <a class="btn btn-danger col-md-12">Add To Cart</a>
-<!--                            <a class="btn btn-danger col-md-12">Add To Cart</a>-->
-<!--                            <a href="#" class="btn text-white btn-warning col-md-12">Out of Stock</a>-->
+
+                    <th:block th:if="${product.stock > 0}">
+                        <a class="btn btn-primary col-md-12">Add To Cart</a>
+                    </th:block>
+                    <th:block th:if="${product.stock <= 0}">
+                        <a href="#" class="btn text-white btn-danger col-md-12">Out of Stock</a>
+                    </th:block>
+
                 </div>
             </div>
         </div>
