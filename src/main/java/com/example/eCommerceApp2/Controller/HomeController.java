@@ -103,11 +103,11 @@ public class HomeController {
         return "redirect:/register";
     }
 
-    @GetMapping("/category")
-    public String getActiveCategory(Model m){
-
-        return "";
-    }
+//    @GetMapping("/category")
+//    public String getActiveCategory(Model m){
+//
+//        return "";
+//    }
 
 
 }

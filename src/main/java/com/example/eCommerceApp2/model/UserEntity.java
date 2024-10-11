@@ -10,6 +10,8 @@ public class UserEntity {
 
     private String name, mobileNumber, email, address, city, state, pinCode, password, image, role;
 
+    private Boolean isEnable;
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -42,4 +44,8 @@ public class UserEntity {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public Boolean getEnable() { return isEnable; }
+    public void setEnable(Boolean enable) { isEnable = enable; }
+
 }

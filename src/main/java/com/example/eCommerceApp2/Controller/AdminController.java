@@ -211,5 +211,13 @@ public class AdminController {
         }
         return "redirect:/admin/editProduct/" + product.getId();
     }
+
+    @GetMapping("/users")
+    public String getAllUsers(Model m){
+        List<UserEntity> users = userService.getUsers("ROLE_USER");
+
+        m.addAttribute("users",users);
+        return "/admin/users";
+    }
 }
 

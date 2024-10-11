@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymLeaf.org"
+      th:replace="~{base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+</head>
+<body>
+<section>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Users</h3>
+                <th:block th:if="${session.successMsg}">
+                    <p class="text-success fw-bold">[[${session.successMsg}]]</p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                </th:block>
+                <th:block th:if="${session.errorMsg}">
+                    <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                </th:block>
+            </div>
+            <div class="card-body text-center">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Sl No.</th>
+                        <th scope="col">Profile</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Contact No.</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u,c:${users}">
+                        <th scope="row">[[${c.count}]]</th>
+                        <td><img th:src="@{'/img/profile_img/'+${u.image}}" width="50px" height="50px"></td>
+                        <td>[[${u.name}]]</td>
+                        <td>[[${u.email}]]</td>
+                        <td>[[${u.mobileNumber}]]</td>
+                        <td>[[${u.address + ', ' + u.state + ', ' +u.city +', '+u.pinCode}]]</td>
+                        <td>
+                            <span th:if="${u.enable == true}" class="text-success">True</span>
+                            <span th:if="${u.enable == false}" class="text-danger">False</span>
+                        </td>
+                        <td>
+                            <a th:href="@{'/admin/editProduct/' + ${u.id}}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square text-light"></i>Edit</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
