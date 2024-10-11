@@ -11,4 +11,6 @@ public interface UserService {
     public UserEntity getUserByEmail(String email);
 
     public List<UserEntity> getUsers(String role);
+
+    Boolean updateAccountStatus(String id, Boolean status);
 }

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,6 +37,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserEntity> getUsers(String role){
         return userRepository.findByRole(role);
+    }
+
+    @Override
+    public Boolean updateAccountStatus(String id, Boolean status) {
+        Optional<UserEntity> findByUser = userRepository.findById(id);
+        if(findByUser.isPresent()){
+            UserEntity userDetails = findByUser.get();
+            userDetails.setEnable(status);
+            userRepository.save(userDetails);
+            return true;
+        }
+        return false;
     }
 
 }

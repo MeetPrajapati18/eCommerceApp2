@@ -47,7 +47,8 @@
                             <span th:if="${u.enable == false}" class="text-danger">False</span>
                         </td>
                         <td>
-                            <a th:href="@{'/admin/editProduct/' + ${u.id}}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square text-light"></i>Edit</a>
+                            <a th:href="@{'/admin/updateStatus?status=true&id='+${u.id}}" class="btn btn-primary">Active</a>
+                            <a th:href="@{'/admin/updateStatus?status=false&id='+${u.id}}" class="btn btn-danger">Inactive</a>
                         </td>
                     </tr>
                     </tbody>
