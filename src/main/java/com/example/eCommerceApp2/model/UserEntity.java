@@ -3,6 +3,8 @@ package com.example.eCommerceApp2.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Date;
+
 public class UserEntity {
 
     @Id
@@ -10,7 +12,11 @@ public class UserEntity {
 
     private String name, mobileNumber, email, address, city, state, pinCode, password, image, role;
 
-    private Boolean isEnable;
+    private Boolean isEnable, accountNonLocked;
+
+    private Integer failedAttempt;
+
+    private Date lockTime;
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -47,5 +53,14 @@ public class UserEntity {
 
     public Boolean getEnable() { return isEnable; }
     public void setEnable(Boolean enable) { isEnable = enable; }
+
+    public Boolean getAccountNonLocked() { return accountNonLocked;}
+    public void setAccountNonLocked(Boolean accountLocked) { this.accountNonLocked = accountLocked; }
+
+    public Integer getFailedAttempt() { return failedAttempt; }
+    public void setFailedAttempt(Integer failedAttempt) { this.failedAttempt = failedAttempt; }
+
+    public Date getLockTime() { return lockTime; }
+    public void setLockTime(Date lockTime) { this.lockTime = lockTime; }
 
 }
