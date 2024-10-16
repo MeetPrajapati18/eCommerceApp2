@@ -10,7 +10,7 @@ public class UserEntity {
     @Id
     private String id;
 
-    private String name, mobileNumber, email, address, city, state, pinCode, password, image, role;
+    private String name, mobileNumber, email, address, city, state, pinCode, password, image, role, resetToken;
 
     private Boolean isEnable, accountNonLocked;
 
@@ -63,4 +63,6 @@ public class UserEntity {
     public Date getLockTime() { return lockTime; }
     public void setLockTime(Date lockTime) { this.lockTime = lockTime; }
 
+    public String getResetToken() { return resetToken;}
+    public void setResetToken(String resetToken) {this.resetToken = resetToken;}
 }

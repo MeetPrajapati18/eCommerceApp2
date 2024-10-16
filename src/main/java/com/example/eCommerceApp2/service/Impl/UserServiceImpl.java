@@ -7,6 +7,7 @@ import com.example.eCommerceApp2.util.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.engine.TemplateManager;
 
 import java.util.Date;
 import java.util.List;
@@ -88,6 +89,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void resetAttempt(String userId) {
 
+    }
+
+    @Override
+    public void updateUserResetToken(String email, String resetToken) {
+        UserEntity findByEMail = userRepository.findByEmail(email);
+        userRepository.save(findByEMail);
     }
 
 }

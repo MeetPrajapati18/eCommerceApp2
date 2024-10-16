@@ -8,17 +8,19 @@ public interface UserService {
 
     UserEntity saveUser(UserEntity user);
 
-    public UserEntity getUserByEmail(String email);
+    UserEntity getUserByEmail(String email);
 
-    public List<UserEntity> getUsers(String role);
+    List<UserEntity> getUsers(String role);
 
     Boolean updateAccountStatus(String id, Boolean status);
 
-    public void increaseFailedAttempt(UserEntity user);
+    void increaseFailedAttempt(UserEntity user);
 
-    public void userAccountLock(UserEntity user);
+    void userAccountLock(UserEntity user);
 
-    public Boolean unlockAccountTimeExpired(UserEntity user);
+    Boolean unlockAccountTimeExpired(UserEntity user);
 
-    public void resetAttempt(String userId);
+    void resetAttempt(String userId);
+
+    void updateUserResetToken(String email, String resetToken);
 }
