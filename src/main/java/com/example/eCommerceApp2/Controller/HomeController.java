@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -46,6 +47,9 @@ public class HomeController {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
@@ -115,20 +119,12 @@ public class HomeController {
         return "redirect:/register";
     }
 
-//    @GetMapping("/category")
-//    public String getActiveCategory(Model m){
-//
-//        return "";
-//    }
-
     //Forget Password Controller code
 
     @GetMapping("/forgot-password")
     public String showForgotPassword(){
         return "forgot_password";
     }
-
-
 
     @PostMapping("/forgot-password")
     public String processForgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
@@ -153,10 +149,31 @@ public class HomeController {
         return "redirect:/forgot-password";
     }
 
-
     @GetMapping("/reset-password")
-    public String showResetPassword(){
+    public String showResetPassword(@RequestParam String token, HttpSession session, Model m){
+        UserEntity userByToken = userService.getUserByToken(token);
+
+        if (ObjectUtils.isEmpty(userByToken)){
+            m.addAttribute("message", "Your link is invalid or expired");
+            return "message";
+        }
+        m.addAttribute("token",token);
         return "reset_password";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestParam String token, @RequestParam String password, HttpSession session, Model m){
+        UserEntity userByToken = userService.getUserByToken(token);
+
+        if (ObjectUtils.isEmpty(userByToken)){
+            m.addAttribute("message", "Your link is invalid or expired");
+        }else{
+            userByToken.setPassword(passwordEncoder.encode(password));
+            userByToken.setResetToken(null);
+            userService.updateUser(userByToken);
+            m.addAttribute("message","Password has been changed successfully.");
+        }
+        return "message";
     }
 }
 

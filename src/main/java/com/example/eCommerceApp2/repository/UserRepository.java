@@ -9,4 +9,6 @@ public interface UserRepository extends MongoRepository<UserEntity, String> {
     public UserEntity findByEmail(String email);
 
     List<UserEntity> findByRole(String role);
+
+    UserEntity findByResetToken(String token);
 }

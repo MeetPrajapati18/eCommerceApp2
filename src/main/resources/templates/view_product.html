@@ -39,7 +39,7 @@
                         <br> Category: [[${product.category}]]<br> Policy : 7 Days Replacement & Return
                     </p>
                     <p class="fs-5 fw-bold">
-                        Price : <i class="fas fa-rupee-sign"></i>
+                        Price : <i class="fas fa-dollar-sign"></i>
                         [[${product.discountPrice}]]<span class="fs-6 text-decoration-line-through text-secondary">[[${product.price}]]</span>
                         <span class="fs-6  text-success">[[${product.discount}]] off</span>
                     </p>
@@ -60,7 +60,12 @@
                     </div>
 
                     <th:block th:if="${product.stock > 0}">
-                        <a class="btn btn-primary col-md-12">Add To Cart</a>
+                        <th:block th:if="${user == null}">
+                            <a href="/signin" class="btn btn-primary col-md-12">Add To Cart</a>
+                        </th:block>
+                        <th:block th:unless="${user == null}">
+                            <a th:href="@{'/user/addCart?productId='+${product.id}+'&userId='+${user.id}}" class="btn btn-primary col-md-12">Add To Cart</a>
+                        </th:block>
                     </th:block>
                     <th:block th:if="${product.stock <= 0}">
                         <a href="#" class="btn text-white btn-danger col-md-12">Out of Stock</a>

@@ -93,8 +93,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserResetToken(String email, String resetToken) {
-        UserEntity findByEMail = userRepository.findByEmail(email);
-        userRepository.save(findByEMail);
+        UserEntity user = userRepository.findByEmail(email);
+        if (user != null) {
+            // Set the reset token
+            user.setResetToken(resetToken);
+            // Save the updated user entity to the repository
+            userRepository.save(user);
+        } else {
+            // Handle the case where the user is not found
+            System.out.println("User not found with email: " + email);
+        }
+    }
+
+    @Override
+    public UserEntity getUserByToken(String token) {
+        return userRepository.findByResetToken(token);
+    }
+
+    @Override
+    public UserEntity updateUser(UserEntity user) {
+        return userRepository.save(user);
     }
 
 }
