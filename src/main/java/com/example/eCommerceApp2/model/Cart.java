@@ -2,12 +2,13 @@ package com.example.eCommerceApp2.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-
+@Document(collection = "carts")
 public class Cart {
 
     @Id
-    private String Id;
+    private String id;
 
     private UserEntity user;
 
@@ -18,12 +19,15 @@ public class Cart {
     @Transient
     private Double totalPrice;
 
+    @Transient
+    private Double totalOrderPrice;
+
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public UserEntity getUser() {
@@ -48,5 +52,21 @@ public class Cart {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Double getTotalOrderPrice() {
+        return totalOrderPrice;
+    }
+
+    public void setTotalOrderPrice(Double totalOrderPrice) {
+        this.totalOrderPrice = totalOrderPrice;
     }
 }

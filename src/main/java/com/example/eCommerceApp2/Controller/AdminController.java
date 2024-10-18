@@ -3,6 +3,7 @@ package com.example.eCommerceApp2.Controller;
 import com.example.eCommerceApp2.model.Category;
 import com.example.eCommerceApp2.model.Product;
 import com.example.eCommerceApp2.model.UserEntity;
+import com.example.eCommerceApp2.service.CartService;
 import com.example.eCommerceApp2.service.CategoryService;
 import com.example.eCommerceApp2.service.ProductService;
 import com.example.eCommerceApp2.service.UserService;
@@ -37,12 +38,17 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CartService cartService;
+
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
         if(p != null){
             String email = p.getName();
             UserEntity userByEmail = userService.getUserByEmail(email);
             m.addAttribute("user",userByEmail);
+            Integer countCart = cartService.getCountCart(userByEmail.getId());
+            m.addAttribute("countCart", countCart);
         }
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
         m.addAttribute("categories",allActiveCategory);

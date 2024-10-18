@@ -18,6 +18,15 @@
     <div class="container card-sh mt-5" style="margin-top: 70px margin-bottom: 40px">
             <div class="col-md-12 p-5">
                 <div class="row">
+                    <th:block th:if="${session.successMsg}">
+                        <p class="text-success alert alert-success text-center" role="alert">[[${session.successMsg}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <th:block th:if="${session.errorMsg}">
+                        <p class="text-danger text-center  alert alert-danger">[[${session.errorMsg}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
                 <div class="col-md-6 text-center">
                     <img alt=" " th:src="@{'/img/product_img/'+${product.image}}" class="img-fluid" height="330" width="400">
                 </div>
