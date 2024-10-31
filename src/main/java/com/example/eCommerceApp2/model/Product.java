@@ -50,4 +50,7 @@ public class Product {
     public Boolean getActive() { return isActive; }
     public void setActive(Boolean active) { isActive = active; }
 
+    public Boolean getIsActive() { return isActive; }  // Correct getter method
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
 }

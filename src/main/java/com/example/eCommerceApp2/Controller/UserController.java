@@ -1,12 +1,12 @@
 package com.example.eCommerceApp2.Controller;
 
 
-import com.example.eCommerceApp2.model.Cart;
-import com.example.eCommerceApp2.model.Category;
-import com.example.eCommerceApp2.model.UserEntity;
+import com.example.eCommerceApp2.model.*;
 import com.example.eCommerceApp2.service.CartService;
+import com.example.eCommerceApp2.service.OrderService;
 import com.example.eCommerceApp2.service.UserService;
 import com.example.eCommerceApp2.service.CategoryService;
+import com.example.eCommerceApp2.util.OrderStatus;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +29,9 @@ public class UserController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private OrderService orderService;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
@@ -82,5 +85,48 @@ public class UserController {
     public String updateCartQuantity(@RequestParam String symbol, @RequestParam String cartId){
         cartService.updateQuantity(symbol,cartId);
         return "redirect:/user/cart";
+    }
+
+    @GetMapping("/orders")
+    public String orderPage(Principal p, Model m){
+        UserEntity user = getLoggedInUserDetails(p);
+        List<Cart> carts = cartService.getCartsByUser(user.getId());
+        m.addAttribute("carts", carts);
+        if(carts.size() > 0){
+            Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+            Double totalOrderPrice = 1.13 * (carts.get(carts.size()-1).getTotalOrderPrice() + 5);
+            m.addAttribute("orderPrice",orderPrice);
+            m.addAttribute("totalOrderPrice",totalOrderPrice);
+        }
+        return "/user/order";
+    }
+
+    @PostMapping("/save-order")
+    public String saveOrder(@ModelAttribute OrderRequest request, Principal p){
+//        System.out.println(request);
+        UserEntity user = getLoggedInUserDetails(p);
+        orderService.saveOrder(user.getId(), request);
+        return "redirect:/user/success";
+    }
+
+    @GetMapping("/success")
+    public String loadSuccess(){
+        return "/user/success";
+    }
+
+    @GetMapping("/user-orders")
+    public String myOrder(Model m, Principal p){
+        UserEntity loginUser = getLoggedInUserDetails(p);
+        List<ProductOrder> orders = orderService.getOrderByUser(loginUser.getId());
+        m.addAttribute("orders",orders);
+        return "/user/my_order";
+    }
+
+    @GetMapping("/update-status")
+    public String updateStatus(@RequestParam String id, @RequestParam String st){
+
+        OrderStatus[] values = OrderStatus.values();
+        System.out.println("Values:" + values);
+        return "redirect:/user/orders";
     }
 }
