@@ -7,12 +7,14 @@ import com.example.eCommerceApp2.model.ProductOrder;
 import com.example.eCommerceApp2.repository.CartRepository;
 import com.example.eCommerceApp2.repository.ProductOrderRepository;
 import com.example.eCommerceApp2.service.OrderService;
+import com.example.eCommerceApp2.util.CommonUtil;
 import com.example.eCommerceApp2.util.OrderStatus;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +27,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @Override
     public void saveOrder(String userId, OrderRequest orderRequest) {
@@ -54,7 +59,13 @@ public class OrderServiceImpl implements OrderService {
             address.setPincode(orderRequest.getPincode());
 
             order.setOrderAddress(address);
-            orderRepository.save(order);
+            ProductOrder saveOrder = orderRepository.save(order);
+
+            try {
+                commonUtil.sendMailForProductOrder(saveOrder, "Success");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -65,14 +76,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Boolean updateOrderStatus(String id, String status) {
+    public ProductOrder updateOrderStatus(String id, String status) {
         Optional<ProductOrder> findById = orderRepository.findById(id);
         if (findById.isPresent()){
             ProductOrder productOrder = findById.get();
             productOrder.setStatus(status);
-            orderRepository.save(productOrder);
-            return true;
+            ProductOrder updateOrder = orderRepository.save(productOrder);
+            return updateOrder;
         }
-        return false;
+        return null;
+    }
+
+    @Override
+    public List<ProductOrder> getAllOrder() {
+        return orderRepository.findAll();
     }
 }

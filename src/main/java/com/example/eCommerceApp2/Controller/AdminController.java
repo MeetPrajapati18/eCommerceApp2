@@ -2,11 +2,12 @@ package com.example.eCommerceApp2.Controller;
 
 import com.example.eCommerceApp2.model.Category;
 import com.example.eCommerceApp2.model.Product;
+import com.example.eCommerceApp2.model.ProductOrder;
 import com.example.eCommerceApp2.model.UserEntity;
-import com.example.eCommerceApp2.service.CartService;
-import com.example.eCommerceApp2.service.CategoryService;
-import com.example.eCommerceApp2.service.ProductService;
-import com.example.eCommerceApp2.service.UserService;
+import com.example.eCommerceApp2.service.*;
+import com.example.eCommerceApp2.util.CommonUtil;
+import com.example.eCommerceApp2.util.OrderStatus;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +42,12 @@ public class AdminController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
@@ -235,5 +243,40 @@ public class AdminController {
             session.setAttribute("errorMsg","Sorry  something went wrong in server.");
         }
         return "redirect:/admin/users";
+    }
+
+    @GetMapping("/orders")
+    public String getAllOrders(Model m){
+        List<ProductOrder> allOrders = orderService.getAllOrder();
+        m.addAttribute("orders", allOrders);
+        return "/admin/orders";
+    }
+
+    @PostMapping("/update-order-status")
+    public String updateStatus(@RequestParam String id, @RequestParam Integer st, HttpSession session){
+
+        OrderStatus[] values = OrderStatus.values();
+        String status = null;
+
+        for (OrderStatus orderStatus:values){
+            if (orderStatus.getId().equals(st)){
+                status = orderStatus.getName();
+            }
+        }
+
+        ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+        try {
+            commonUtil.sendMailForProductOrder(updateOrder, status);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if(!ObjectUtils.isEmpty(updateOrder)){
+            session.setAttribute("successMsg", "Order status updated successfully.");
+        } else{
+            session.setAttribute("errorMsg","Sorry,Something went wrong.");
+        }
+
+        return "redirect:/admin/orders";
     }
 }

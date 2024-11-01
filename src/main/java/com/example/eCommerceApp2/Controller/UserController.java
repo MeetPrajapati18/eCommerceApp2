@@ -6,7 +6,9 @@ import com.example.eCommerceApp2.service.CartService;
 import com.example.eCommerceApp2.service.OrderService;
 import com.example.eCommerceApp2.service.UserService;
 import com.example.eCommerceApp2.service.CategoryService;
+import com.example.eCommerceApp2.util.CommonUtil;
 import com.example.eCommerceApp2.util.OrderStatus;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.List;
 
@@ -32,6 +35,9 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
@@ -94,7 +100,7 @@ public class UserController {
         m.addAttribute("carts", carts);
         if(carts.size() > 0){
             Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
-            Double totalOrderPrice = 1.13 * (carts.get(carts.size()-1).getTotalOrderPrice() + 5);
+            Double totalOrderPrice = 1.13 * (carts.get(carts.size()-1).getTotalOrderPrice());
             m.addAttribute("orderPrice",orderPrice);
             m.addAttribute("totalOrderPrice",totalOrderPrice);
         }
@@ -103,7 +109,6 @@ public class UserController {
 
     @PostMapping("/save-order")
     public String saveOrder(@ModelAttribute OrderRequest request, Principal p){
-//        System.out.println(request);
         UserEntity user = getLoggedInUserDetails(p);
         orderService.saveOrder(user.getId(), request);
         return "redirect:/user/success";
@@ -123,10 +128,38 @@ public class UserController {
     }
 
     @GetMapping("/update-status")
-    public String updateStatus(@RequestParam String id, @RequestParam String st){
+    public String updateStatus(@RequestParam String id, @RequestParam int st, HttpSession session){
 
         OrderStatus[] values = OrderStatus.values();
-        System.out.println("Values:" + values);
-        return "redirect:/user/orders";
+        String status = null;
+
+        for (OrderStatus orderStatus:values){
+            if (orderStatus.getId().equals(st)){
+                status = orderStatus.getName();
+            }
+        }
+
+        ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+        try {
+            commonUtil.sendMailForProductOrder(updateOrder, status);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if(!ObjectUtils.isEmpty(updateOrder)){
+            session.setAttribute("successMsg", "Order status updated successfully.");
+        } else{
+            session.setAttribute("errorMsg","Sorry,Something went wrong.");
+        }
+
+        return "redirect:/user/user-orders";
     }
+
+    @GetMapping("/profile")
+    public String profile(Model m, Principal p){
+        UserEntity userEntity = getLoggedInUserDetails(p);
+        m.addAttribute("userEntity", userEntity);
+        return "/user/profile";
+    }
+
 }

@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class ProductOrder {
 
@@ -27,6 +28,12 @@ public class ProductOrder {
     private String paymentType;
 
     private OrderAddress orderAddress;
+
+    private List<ProductOrder> productOrders;
+
+    public List<ProductOrder> getProductOrders() {
+        return productOrders;
+    }
 
     public String getId() {
         return id;

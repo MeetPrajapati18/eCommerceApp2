@@ -11,5 +11,7 @@ public interface OrderService {
 
     List<ProductOrder> getOrderByUser(String userId);
 
-    Boolean updateOrderStatus(String id, String status);
+    ProductOrder updateOrderStatus(String id, String status);
+
+    List<ProductOrder> getAllOrder();
 }
