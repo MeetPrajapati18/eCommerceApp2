@@ -37,65 +37,54 @@
               <tr>
                 <th scope="row">Name</th>
                 <td>:</td>
-                <td><input type="text" name="name" class="form-control"
-                           th:value="${user.name}"></td>
+                <td><input type="text" name="name" class="form-control" th:value="${user.name}"></td>
               </tr>
               <tr>
                 <th scope="row">Mobile Number</th>
                 <td>:</td>
-                <td><input type="text" name="mobileNumber"
-                           class="form-control" th:value="${user.mobileNumber}"></td>
+                <td><input type="text" name="mobileNumber" class="form-control" th:value="${user.mobileNumber}"></td>
               </tr>
               <tr>
                 <th scope="row">Email</th>
                 <td>:</td>
-                <td><input type="text" name="" class="form-control"
-                           readonly th:value="${user.email}"></td>
+                <td><input type="text" name="email" class="form-control" readonly th:value="${user.email}"></td>
               </tr>
               <tr>
                 <th scope="row">Address</th>
                 <td>:</td>
-                <td><input type="text" name="address" class="form-control"
-                           th:value="${user.address}"></td>
+                <td><input type="text" name="address" class="form-control" th:value="${user.address}"></td>
               </tr>
               <tr>
                 <th scope="row">City</th>
                 <td>:</td>
-                <td><input type="text" name="city" class="form-control"
-                           th:value="${user.city}"></td>
+                <td><input type="text" name="city" class="form-control" th:value="${user.city}"></td>
               </tr>
               <tr>
                 <th scope="row">State</th>
                 <td>:</td>
-                <td><input type="text" name="state" class="form-control"
-                           th:value="${user.state}"></td>
+                <td><input type="text" name="state" class="form-control" th:value="${user.state}"></td>
               </tr>
               <tr>
                 <th scope="row">Pincode</th>
                 <td>:</td>
-                <td><input type="text" name="pincode" class="form-control"
-                           th:value="${user.pinCode}"></td>
+                <td><input type="text" name="pinCode" class="form-control" th:value="${user.pinCode}"></td>
               </tr>
               <tr>
                 <th scope="row">Image</th>
                 <td>:</td>
-                <td><input type="file" name="img" class="form-control"
-                           value=""></td>
+                <td><input type="file" name="img" class="form-control"></td>
               </tr>
               <tr>
                 <th scope="row">Role</th>
                 <td>:</td>
-                <td><input type="text" name="" class="form-control"
-                           readonly th:value="${user.role}"></td>
+                <td><input type="text" name="role" class="form-control" readonly th:value="${user.role}"></td>
               </tr>
               <tr>
                 <th scope="row">Account Status</th>
                 <td>:</td>
-                <td><input type="text" name="" class="form-control"
-                           readonly th:value="${user.enable}"> <input
-                        type="hidden" th:value="${user.id}" name="id"></td>
+                <td><input type="text" name="enable" class="form-control" readonly th:value="${user.enable}">
+                  <input type="hidden" th:value="${user.id}" name="id"></td>
               </tr>
-
               <tr>
                 <td></td>
                 <td class="text-center">
@@ -140,7 +129,6 @@
                   <td class="text-center">
                     <button class="btn btn-sm bg-primary text-light col-md-4">Update</button>
                   </td>
-
                 </tr>
               </form>
               </tbody>
@@ -148,16 +136,8 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
-
-
-
-
-
-
 </section>
 </body>
 </html>

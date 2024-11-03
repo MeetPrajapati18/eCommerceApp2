@@ -1,6 +1,8 @@
 package com.example.eCommerceApp2.service;
 
 import com.example.eCommerceApp2.model.UserEntity;
+import org.apache.catalina.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,4 +29,6 @@ public interface UserService {
     UserEntity getUserByToken(String token);
 
     UserEntity updateUser(UserEntity user);
+
+    UserEntity updateUserProfile(UserEntity user, MultipartFile image);
 }

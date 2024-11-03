@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
@@ -98,7 +99,7 @@ public class UserController {
         UserEntity user = getLoggedInUserDetails(p);
         List<Cart> carts = cartService.getCartsByUser(user.getId());
         m.addAttribute("carts", carts);
-        if(carts.size() > 0){
+        if(!carts.isEmpty()){
             Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
             Double totalOrderPrice = 1.13 * (carts.get(carts.size()-1).getTotalOrderPrice());
             m.addAttribute("orderPrice",orderPrice);
@@ -160,6 +161,17 @@ public class UserController {
         UserEntity userEntity = getLoggedInUserDetails(p);
         m.addAttribute("userEntity", userEntity);
         return "/user/profile";
+    }
+
+    @PostMapping("/update-profile")
+    public String updateProfile(@ModelAttribute UserEntity user, @RequestParam MultipartFile img, HttpSession session){
+        UserEntity updateUserProfile = userService.updateUserProfile(user, img);
+        if(ObjectUtils.isEmpty(updateUserProfile)){
+            session.setAttribute("errorMsg", "Sorry something went wrong.");
+        } else{
+            session.setAttribute("successMsg", "Hurrah!, Profile updated successfully.");
+        }
+        return "redirect:/user/profile";
     }
 
 }
