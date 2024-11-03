@@ -187,8 +187,16 @@ public class AdminController {
     }
 
     @GetMapping("/products")
-    public String loadViewProduct(Model m){
-        m.addAttribute("products",productService.getAllProducts());
+    public String loadViewProduct(Model m, @RequestParam(defaultValue = "") String ch){
+
+        List<Product> products = null;
+
+        if(!ch.isEmpty()){
+             products = productService.searchProduct(ch);
+        } else{
+            products = productService.getAllProducts();
+        }
+        m.addAttribute("products",products);
         return "admin/products";
     }
 
@@ -249,6 +257,7 @@ public class AdminController {
     public String getAllOrders(Model m){
         List<ProductOrder> allOrders = orderService.getAllOrder();
         m.addAttribute("orders", allOrders);
+        m.addAttribute("search", false);
         return "/admin/orders";
     }
 
@@ -278,5 +287,27 @@ public class AdminController {
         }
 
         return "redirect:/admin/orders";
+    }
+
+    @GetMapping("/search-order")
+    public String searchProduct(@RequestParam String orderId, Model m, HttpSession session){
+
+        if(!orderId.isEmpty()){
+            ProductOrder order = orderService.getOrdersByOrderId(orderId.trim());
+
+            if(!ObjectUtils.isEmpty(order)){
+                m.addAttribute("orderDetails", order);
+            } else{
+                session.setAttribute("errorMsg","Sorry,Something went wrong.");
+                m.addAttribute("orderDetails", null);
+            }
+
+            m.addAttribute("search", true);
+        } else{
+            List<ProductOrder> allOrders = orderService.getAllOrder();
+            m.addAttribute("orders", allOrders);
+            m.addAttribute("search", false);
+        }
+        return "/admin/orders";
     }
 }

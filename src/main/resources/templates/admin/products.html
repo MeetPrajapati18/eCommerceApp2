@@ -19,6 +19,26 @@
                         <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
                         <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
                     </th:block>
+
+                    <th:block th:if="${session.errorMsg}">
+                        <p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+                        <th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+
+                    <div class="col-md-4 p-3">
+
+                        <form action="/admin/products" method="get">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control " name="ch" placeholder="Products">
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-primary col">Search</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
                 <div class="card-body text-center">
                     <table class="table">

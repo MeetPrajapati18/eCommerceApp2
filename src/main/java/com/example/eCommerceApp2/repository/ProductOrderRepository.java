@@ -8,4 +8,6 @@ import java.util.List;
 public interface ProductOrderRepository extends MongoRepository <ProductOrder, String> {
 
     List<ProductOrder> findByUserId(String userId);
+
+    ProductOrder findByOrderId(String orderId);
 }

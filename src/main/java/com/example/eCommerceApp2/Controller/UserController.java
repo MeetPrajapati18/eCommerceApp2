@@ -11,6 +11,7 @@ import com.example.eCommerceApp2.util.OrderStatus;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private CommonUtil commonUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model m){
@@ -170,6 +174,27 @@ public class UserController {
             session.setAttribute("errorMsg", "Sorry something went wrong.");
         } else{
             session.setAttribute("successMsg", "Hurrah!, Profile updated successfully.");
+        }
+        return "redirect:/user/profile";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p, HttpSession session){
+        UserEntity loggedInUserDetails = getLoggedInUserDetails(p);
+
+        boolean matches = passwordEncoder.matches(currentPassword,loggedInUserDetails.getPassword());
+
+        if(matches){
+            String encodedPassword  = passwordEncoder.encode(newPassword);
+            loggedInUserDetails.setPassword(encodedPassword);
+            UserEntity updateUser = userService.updateUser(loggedInUserDetails);
+            if(ObjectUtils.isEmpty(updateUser)){
+                session.setAttribute("errorMsg", "Sorry something went wrong.");
+            } else{
+                session.setAttribute("successMsg", "Hurrah!, Password changed successfully.");
+            }
+        } else{
+            session.setAttribute("errorMsg", "Wrong password entered.");
         }
         return "redirect:/user/profile";
     }

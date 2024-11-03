@@ -12,6 +12,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -84,13 +85,27 @@ public class HomeController {
     }
 
     @GetMapping("/product")
-    public String product(Model m, @RequestParam(value = "category", defaultValue = "") String category){
+    public String product(Model m,
+                          @RequestParam(value = "category", defaultValue = "") String category,
+                          @RequestParam (name = "pageNo", defaultValue = "0") Integer pageNo,
+                          @RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize){
         System.out.println("Category = " + category);
-        List<Category> categories = categoryService.getAllActiveCategory();
-        List<Product> products = productService.getAllActiveProduct(category);
         m.addAttribute("paramValue", category);
+        List<Category> categories = categoryService.getAllActiveCategory();
         m.addAttribute("categories",categories);
-        m.addAttribute("products",products);
+//        List<Product> products = productService.getAllActiveProduct(category);
+//        m.addAttribute("products",products);
+        Page<Product> page = productService.getAllActiveProductPagination(pageNo, pageSize, category);
+        List<Product> products = page.getContent();
+        m.addAttribute("productsSize",products.size());
+        m.addAttribute("products", page.getContent());
+        m.addAttribute("pageNo", page.getNumber());
+        m.addAttribute("pageSize",pageSize);
+        m.addAttribute("totalElements", page.getTotalElements());
+        m.addAttribute("totalPages", page.getTotalPages());
+        m.addAttribute("isFirst",page.isFirst());
+        m.addAttribute("isLast", page.isLast());
+
         return "product";
     }
 
@@ -180,6 +195,16 @@ public class HomeController {
             m.addAttribute("message","Password has been changed successfully.");
         }
         return "message";
+    }
+
+    @GetMapping("/search")
+    public String searchProduct(@RequestParam String ch, Model m){
+        List<Product> searchProduct = productService.searchProduct(ch);
+        m.addAttribute("products", searchProduct);
+        List<Category> categories = categoryService.getAllActiveCategory();
+        m.addAttribute("categories",categories);
+
+        return "product";
     }
 }
 
