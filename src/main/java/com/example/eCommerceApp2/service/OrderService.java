@@ -2,6 +2,7 @@ package com.example.eCommerceApp2.service;
 
 import com.example.eCommerceApp2.model.OrderRequest;
 import com.example.eCommerceApp2.model.ProductOrder;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface OrderService {
     List<ProductOrder> getAllOrder();
 
     ProductOrder getOrdersByOrderId(String orderId);
+
+    Page<ProductOrder> getAllOrdersPagination(Integer pageNo, Integer pageSize);
 }

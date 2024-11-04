@@ -76,19 +76,19 @@
                     <li class="page-item"
                         th:classappend="${isFirst} ? 'disabled':''"><a
                             class="page-link"
-                            th:href="@{'/products?pageNo='+${pageNo-1}}"
+                            th:href="@{'/product?pageNo='+${pageNo-1}}"
                             aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
                     </a></li>
 
                     <li th:each="i:${#numbers.sequence(1,totalPages)}"
                         class="page-item" th:classappend="${pageNo+1==i}?'active':''"
                         ]]><a class="page-link"
-                              th:href="@{'/products?pageNo='+${i-1}}">[[${i}]]</a></li>
+                              th:href="@{'/product?pageNo='+${i-1}}">[[${i}]]</a></li>
 
                     <li class="page-item"
                         th:classappend="${isLast} ? 'disabled':''"><a
                             class="page-link"
-                            th:href="@{'/products?pageNo='+${pageNo+1}}"
+                            th:href="@{'/product?pageNo='+${pageNo+1}}"
                             aria-label="Next"> <span aria-hidden="true">&raquo;</span>
                     </a></li>
                   </ul>
@@ -97,7 +97,6 @@
             </div>
           </div>
         </div>
-
       </th:block>
       <th:block th:if="${productsSize <= 0}">
         <div class="row">

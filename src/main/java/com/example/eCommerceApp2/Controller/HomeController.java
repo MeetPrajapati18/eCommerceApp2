@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -88,7 +87,7 @@ public class HomeController {
     public String product(Model m,
                           @RequestParam(value = "category", defaultValue = "") String category,
                           @RequestParam (name = "pageNo", defaultValue = "0") Integer pageNo,
-                          @RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize){
+                          @RequestParam(name = "pageSize", defaultValue = "6") Integer pageSize){
         System.out.println("Category = " + category);
         m.addAttribute("paramValue", category);
         List<Category> categories = categoryService.getAllActiveCategory();
@@ -105,7 +104,6 @@ public class HomeController {
         m.addAttribute("totalPages", page.getTotalPages());
         m.addAttribute("isFirst",page.isFirst());
         m.addAttribute("isLast", page.isLast());
-
         return "product";
     }
 

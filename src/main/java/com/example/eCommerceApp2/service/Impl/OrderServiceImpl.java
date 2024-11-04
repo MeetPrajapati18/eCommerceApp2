@@ -9,11 +9,12 @@ import com.example.eCommerceApp2.repository.ProductOrderRepository;
 import com.example.eCommerceApp2.service.OrderService;
 import com.example.eCommerceApp2.util.CommonUtil;
 import com.example.eCommerceApp2.util.OrderStatus;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -95,5 +96,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ProductOrder getOrdersByOrderId(String orderId) {
         return orderRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    public Page<ProductOrder> getAllOrdersPagination(Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return orderRepository.findAll(pageable);
     }
 }
